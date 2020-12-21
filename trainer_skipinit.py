@@ -11,12 +11,12 @@ import torch.optim
 import torch.utils.data
 import torchvision.transforms as transforms
 import torchvision.datasets as datasets
-import resnet
+import resnet_skipinit
 
-model_names = sorted(name for name in resnet.__dict__
+model_names = sorted(name for name in resnet_skipinit.__dict__
     if name.islower() and not name.startswith("__")
                      and name.startswith("resnet")
-                     and callable(resnet.__dict__[name]))
+                     and callable(resnet_skipinit.__dict__[name]))
 
 print(model_names)
 
@@ -70,7 +70,7 @@ def main():
     if not os.path.exists(args.save_dir):
         os.makedirs(args.save_dir)
 
-    model = torch.nn.DataParallel(resnet.__dict__[args.arch]())
+    model = torch.nn.DataParallel(resnet_skipinit.__dict__[args.arch]())
     model.to(device)
     # model.cuda()
 
