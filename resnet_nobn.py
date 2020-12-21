@@ -123,6 +123,7 @@ class ResNet(nn.Module):
 def resnet20():
     return ResNet(BasicBlock, [3, 3, 3])
 
+
 def resnet20_nobn():
     return ResNet(BasicBlock, [3, 3, 3])
 
