@@ -34,7 +34,7 @@ import torch.nn.init as init
 
 from torch.autograd import Variable
 
-__all__ = ['ResNet', 'resnet20', 'resnet32', 'resnet44', 'resnet56', 'resnet110', 'resnet1202']
+__all__ = ['ResNet', 'resnet20', 'resnet32', 'resnet44', 'resnet56', 'resnet110', 'resnet1202', 'resnet20_skipinit']
 
 def _weights_init(m):
     classname = m.__class__.__name__
@@ -74,10 +74,18 @@ class BasicBlock(nn.Module):
                      nn.Conv2d(in_planes, self.expansion * planes, kernel_size=1, stride=stride, bias=False),
                      nn.BatchNorm2d(self.expansion * planes)
                 )
+        self.res_multiplier = nn.Parameter(torch.zeros(1))
 
     def forward(self, x):
-        out = F.relu(self.bn1(self.conv1(x)))
-        out = self.bn2(self.conv2(out))
+        # out = F.relu(self.bn1(self.conv1(x)))
+        # out = self.bn2(self.conv2(out))
+
+        out = F.relu(self.conv1(x))
+        out = self.conv2(out)
+
+        # SkipInit
+        out = self.res_multiplier * out
+
         out += self.shortcut(x)
         out = F.relu(out)
         return out
@@ -107,7 +115,8 @@ class ResNet(nn.Module):
         return nn.Sequential(*layers)
 
     def forward(self, x):
-        out = F.relu(self.bn1(self.conv1(x)))
+        # out = F.relu(self.bn1(self.conv1(x)))
+        out = F.relu(self.conv1(x))
         out = self.layer1(out)
         out = self.layer2(out)
         out = self.layer3(out)
@@ -118,6 +127,10 @@ class ResNet(nn.Module):
 
 
 def resnet20():
+    return ResNet(BasicBlock, [3, 3, 3])
+
+
+def resnet20_skipinit():
     return ResNet(BasicBlock, [3, 3, 3])
 
 
