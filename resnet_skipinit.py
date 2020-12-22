@@ -34,7 +34,7 @@ import torch.nn.init as init
 
 from torch.autograd import Variable
 
-__all__ = ['ResNet', 'resnet20', 'resnet32', 'resnet44', 'resnet56', 'resnet110', 'resnet1202', 'resnet20_skipinit']
+__all__ = ['ResNet', 'resnet20_skipinit', 'resnet32_skipinit']
 
 def _weights_init(m):
     classname = m.__class__.__name__
@@ -57,9 +57,9 @@ class BasicBlock(nn.Module):
     def __init__(self, in_planes, planes, stride=1, option='A'):
         super(BasicBlock, self).__init__()
         self.conv1 = nn.Conv2d(in_planes, planes, kernel_size=3, stride=stride, padding=1, bias=False)
-        self.bn1 = nn.BatchNorm2d(planes)
+        # self.bn1 = nn.BatchNorm2d(planes)
         self.conv2 = nn.Conv2d(planes, planes, kernel_size=3, stride=1, padding=1, bias=False)
-        self.bn2 = nn.BatchNorm2d(planes)
+        # self.bn2 = nn.BatchNorm2d(planes)
 
         self.shortcut = nn.Sequential()
         if stride != 1 or in_planes != planes:
@@ -126,32 +126,28 @@ class ResNet(nn.Module):
         return out
 
 
-def resnet20():
-    return ResNet(BasicBlock, [3, 3, 3])
-
-
 def resnet20_skipinit():
     return ResNet(BasicBlock, [3, 3, 3])
 
 
-def resnet32():
+def resnet32_skipinit():
     return ResNet(BasicBlock, [5, 5, 5])
-
-
-def resnet44():
-    return ResNet(BasicBlock, [7, 7, 7])
-
-
-def resnet56():
-    return ResNet(BasicBlock, [9, 9, 9])
-
-
-def resnet110():
-    return ResNet(BasicBlock, [18, 18, 18])
-
-
-def resnet1202():
-    return ResNet(BasicBlock, [200, 200, 200])
+#
+#
+# def resnet44():
+#     return ResNet(BasicBlock, [7, 7, 7])
+#
+#
+# def resnet56():
+#     return ResNet(BasicBlock, [9, 9, 9])
+#
+#
+# def resnet110():
+#     return ResNet(BasicBlock, [18, 18, 18])
+#
+#
+# def resnet1202():
+#     return ResNet(BasicBlock, [200, 200, 200])
 
 
 def test(net):
